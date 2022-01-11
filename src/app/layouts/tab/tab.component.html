@@ -1,0 +1,17 @@
+<ng-container *ngIf="(asyncTabs | async) === null">
+  Loading tabs...
+</ng-container>
+
+<mat-tab-group>
+  <mat-tab *ngFor="let tab of asyncTabs | async">
+    <ng-template mat-tab-label>{{ tab.label }}</ng-template>
+    <div *ngIf="tab.label === 'Profit'; else elseBlock">
+      <app-profit></app-profit>
+    </div>
+    <div>
+      <ng-template #elseBlock>
+        <app-non-profit></app-non-profit>
+      </ng-template>
+    </div>
+  </mat-tab>
+</mat-tab-group>

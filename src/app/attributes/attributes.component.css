@@ -1,0 +1,89 @@
+.page {
+  color: white;
+  padding: 0 0rem;
+  background: #f1f5f9;
+}
+.page__content {
+  min-height: calc(106vh - 175px);
+  border-radius: 1px;
+  margin-top: -4rem;
+  background: white;
+  color: black;
+  font-size: 1rem;
+}
+
+.page__content-data {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.page {
+  color: white;
+  padding: 0 0rem;
+  background: #f1f5f9;
+}
+.page__content {
+  min-height: calc(106vh - 175px);
+  border-radius: 1px;
+  margin-top: -4rem;
+  background: white;
+  color: black;
+  font-size: 1rem;
+}
+.page__content-data {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.add-account {
+  width: inherit !important;
+  min-width: unset !important;
+  font-size: large;
+}
+.required-asterisk {
+  color: red;
+  font-weight: bold;
+  margin-left: 3px;
+  font-size: 1.2em;
+}
+.update-account {
+  display: block;
+  margin-left: auto;
+  width: inherit !important;
+  min-width: unset !important;
+  font-size: small;
+}
+.search-div {
+  padding: 10px;
+  margin-top: -20px;
+  margin-bottom: -20px;
+}
+.search {
+  font-size: 20px;
+  margin-left: 20px;
+}
+table {
+  width: 100%;
+}
+
+.mat-form-field {
+  font-size: 20px;
+  margin-left: 20px;
+}
+th {
+  font-size: 100%;
+  font-weight: bolder;
+}
+td,
+th {
+  width: 15%;
+}
+p {
+  color: #005a64;
+  padding: 20px;
+  margin: 10px;
+  font-size: 22px;
+  justify-content: center;
+  align-content: center;
+  line-height: 1.3;
+}

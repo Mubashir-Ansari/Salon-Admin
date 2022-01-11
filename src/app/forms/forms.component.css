@@ -1,0 +1,38 @@
+.matt2 {
+  width: 45%;
+}
+.btnn {
+  padding-bottom: 40px;
+
+  /* padding-left: 50px; */
+}
+.searchbox {
+  padding-right: 20px;
+}
+.btnn2 {
+  padding-bottom: 30px;
+}
+
+.mattsingle {
+  padding-top: 10%;
+  padding-right: 25%;
+  width: 25%;
+}
+table {
+  width: 100%;
+}
+
+.mat-form-field {
+  font-size: 20px;
+  margin-left: 20px;
+}
+
+th {
+  font-size: 100%;
+  font-weight: bolder;
+  color: #002268;
+}
+td {
+  font-size: 100%;
+  font-weight: lighter;
+}

@@ -1,0 +1,52 @@
+.app {
+  background-image: linear-gradient(
+    to right top,
+    #c1669a,
+    #bd68ad,
+    #b46dc0,
+    #a473d4,
+    #8a7ce8,
+    #697fe5,
+    #4481e0,
+    #0082d7,
+    #0078b3,
+    #006a8b,
+    #005a64,
+    #004844
+  );
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  transition: left 0.5s;
+}
+
+.logo {
+  text-align: center;
+  /* justify-content: center; */
+}
+.logo img {
+  position: relative;
+  top: 40%;
+  width: 150px;
+  height: auto;
+}
+.loader {
+  background: url("../../assets/load2.svg");
+  background-repeat: no-repeat;
+  max-width: 100%;
+  background-position: center;
+  width: 80px;
+  height: 80px;
+  margin-top: 80px;
+  position: absolute;
+  top: 50%;
+  left: 47.5%;
+}

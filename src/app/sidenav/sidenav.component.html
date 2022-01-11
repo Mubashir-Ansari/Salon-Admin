@@ -1,0 +1,42 @@
+<mat-nav-list>
+  <div class="logo">
+    <img src="./assets/SalonX-logos_white.png" alt="Company Logo" />
+  </div>
+  <mat-divider></mat-divider>
+  <h2 matSubheader class="mt-2">SalonX-Administrator</h2>
+
+  <a mat-list-item routerLinkActive="list-item-active" (click)="managesalons()">
+    <mat-icon>account_box</mat-icon> MANAGE SALONS
+  </a>
+  <a
+    mat-list-item
+    routerLinkActive="list-item-active"
+    (click)="activeservices()"
+  >
+    <mat-icon>receipt</mat-icon> SALON ACTIVE SERVICES
+  </a>
+
+  <a
+    mat-list-item
+    routerLinkActive="list-item-active"
+    (click)="salontransactions()"
+  >
+    <mat-icon>perm_data_setting</mat-icon> SALON TRANSACTIONS
+  </a>
+
+  <a
+    mat-list-item
+    routerLinkActive="list-item-active"
+    (click)="salonportfolio()"
+  >
+    <mat-icon>insert_chart_outlined</mat-icon> SALON PORTFOLIO
+  </a>
+
+  <a mat-list-item routerLinkActive="list-item-active" (click)="salonreport()">
+    <mat-icon>insert_chart_outlined</mat-icon> SALON REPORTS
+  </a>
+
+  <a mat-list-item routerLinkActive="list-item-active" (click)="about()">
+    <mat-icon>contact_support</mat-icon> ABOUT
+  </a>
+</mat-nav-list>

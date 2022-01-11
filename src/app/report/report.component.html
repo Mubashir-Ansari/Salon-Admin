@@ -1,0 +1,28 @@
+<div class="container-fluid page">
+  <div class="d-flex page__box p-3 mt-2">Salon Report</div>
+  <div class="page__content shadow p-3 position-relative">
+    <div class="box">
+      <mat-form-field appearance="fill" class="searchbox">
+        <mat-label>Select Salon</mat-label>
+        <mat-select disableRipple>
+          <mat-option value="1">Deja-Vu</mat-option>
+          <mat-option value="2">Freinds Salon</mat-option>
+          <mat-option value="3">Toni & Teez</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button
+        class="btnn2"
+        mat-mini-fab
+        [ngStyle]="{ 'background-color': '#002268' }"
+        aria-label="Example icon button with a home icon"
+      >
+        <mat-icon class="btnn">search</mat-icon>
+      </button>
+    </div>
+    <mat-divider class="bott"></mat-divider>
+    <div style="width: 700px; height: 700px">
+      <canvas id="myChart"></canvas>
+    </div>
+  </div>
+</div>
