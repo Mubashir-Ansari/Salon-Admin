@@ -2,18 +2,43 @@
   <h1 mat-dialog-title>Edit Salon Details</h1>
   <mat-dialog-content class="content">
     <mat-form-field appearance="fill" style="width: 100%">
-      <mat-label>Salon ID <span class="required-asterisk">*</span></mat-label>
+      <mat-label>Salon Name</mat-label>
       <input matInput [(ngModel)]="data.name" />
     </mat-form-field>
 
     <mat-form-field appearance="fill" style="width: 100%">
-      <mat-label>Salon Name</mat-label>
-      <input matInput [(ngModel)]="data.Bank" />
+      <mat-label>City <span class="required-asterisk">*</span></mat-label>
+      <input matInput [(ngModel)]="data.city" />
     </mat-form-field>
 
     <mat-form-field appearance="fill" style="width: 100%">
       <mat-label>Address <span class="required-asterisk">*</span></mat-label>
-      <input matInput [(ngModel)]="data.Balance" />
+      <input matInput [(ngModel)]="data.address" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" style="width: 100%">
+      <mat-label>Password <span class="required-asterisk">*</span></mat-label>
+      <input matInput [(ngModel)]="data.password" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" style="width: 100%">
+      <mat-label>Email</mat-label>
+      <input matInput [(ngModel)]="data.email" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" style="width: 100%">
+      <mat-label>Category</mat-label>
+      <input matInput [(ngModel)]="data.category" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" style="width: 100%">
+      <mat-label>Gender</mat-label>
+      <input matInput [(ngModel)]="data.gender" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" style="width: 100%">
+      <mat-label>Maps</mat-label>
+      <input matInput [(ngModel)]="data.maps" />
     </mat-form-field>
   </mat-dialog-content>
 

@@ -1,21 +1,65 @@
 <div class="dialog">
   <h1 mat-dialog-title>Add Salon Details</h1>
   <mat-dialog-content class="content">
-    <mat-form-field appearance="fill" style="width: 100%">
+    <!-- <mat-form-field appearance="fill" style="width: 100%">
       <mat-label>Salon ID <span class="required-asterisk">*</span></mat-label>
+      <input matInput [(ngModel)]="data.name" />
+    </mat-form-field> -->
+
+    <mat-form-field appearance="fill" style="width: 100%">
+      <mat-label>Salon Name <span class="required-asterisk">*</span></mat-label>
       <input matInput [(ngModel)]="data.name" />
     </mat-form-field>
 
-    <mat-form-field appearance="fill" style="width: 100%">
-      <mat-label>Salon Name</mat-label>
-      <input matInput [(ngModel)]="data.Bank" />
-    </mat-form-field>
+    <!-- <mat-form-field appearance="fill" style="width: 100%">
+      <mat-label>City <span class="required-asterisk">*</span></mat-label>
+      <input matInput [(ngModel)]="data.city" />
+    </mat-form-field> -->
 
     <mat-form-field appearance="fill" style="width: 100%">
       <mat-label>Address <span class="required-asterisk">*</span></mat-label>
-      <input matInput [(ngModel)]="data.Balance" />
+      <input matInput [(ngModel)]="data.address" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" style="width: 100%">
+      <mat-label>Email <span class="required-asterisk">*</span></mat-label>
+      <input matInput type="email" [(ngModel)]="data.email" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" style="width: 100%">
+      <mat-label>Password <span class="required-asterisk">*</span></mat-label>
+      <input matInput type="password" [(ngModel)]="data.password" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" style="width: 100%">
+      <mat-label>Maps</mat-label>
+      <input matInput [(ngModel)]="data.maps" />
     </mat-form-field>
   </mat-dialog-content>
+
+  <mat-form-field appearance="fill" style="width: 100%">
+    <mat-label>Category </mat-label>
+    <mat-select [(ngModel)]="data.category" matNativeControl required>
+      <mat-option value="Karachi">Hair Style</mat-option>
+      <mat-option value="Lahore">Beauty and Spa</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" style="width: 100%">
+    <mat-label>Gender </mat-label>
+    <mat-select [(ngModel)]="data.gender" matNativeControl required>
+      <mat-option value="Karachi">Men</mat-option>
+      <mat-option value="Lahore">Women</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" style="width: 100%">
+    <mat-label>City </mat-label>
+    <mat-select [(ngModel)]="data.city" matNativeControl required>
+      <mat-option value="Karachi">Karachi</mat-option>
+      <mat-option value="Lahore">Lahore</mat-option>
+    </mat-select>
+  </mat-form-field>
 
   <mat-dialog-actions>
     <button mat-raised-button (click)="onNoClick()">No Thanks</button>

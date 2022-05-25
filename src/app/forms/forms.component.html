@@ -1,10 +1,14 @@
 <div class="box">
   <mat-form-field appearance="fill" class="searchbox">
     <mat-label>Select Salon</mat-label>
-    <mat-select disableRipple>
-      <mat-option value="1">Deja-Vu</mat-option>
-      <mat-option value="2">Freinds Salon</mat-option>
-      <mat-option value="3">Toni & Teez</mat-option>
+    <mat-select
+      [(ngModel)]="selectedsalon"
+      name="project"
+      (ngModelChange)="forTable($event)"
+    >
+      <mat-option *ngFor="let salon of salonNames" [value]="salon">
+        {{ salon.name }}
+      </mat-option>
     </mat-select>
   </mat-form-field>
 
@@ -33,19 +37,19 @@
     <!-- Position Column -->
     <ng-container matColumnDef="clientname">
       <th mat-header-cell *matHeaderCellDef>Client Name</th>
-      <td mat-cell *matCellDef="let element">{{ element.clientname }}</td>
+      <td mat-cell *matCellDef="let element">{{ element.users.name }}</td>
     </ng-container>
 
     <!-- Name Column -->
     <ng-container matColumnDef="servicename">
       <th mat-header-cell *matHeaderCellDef>Service Name</th>
-      <td mat-cell *matCellDef="let element">{{ element.servicename }}</td>
+      <td mat-cell *matCellDef="let element">{{ element.services.name }}</td>
     </ng-container>
 
     <!-- Weight Column -->
     <ng-container matColumnDef="amount">
       <th mat-header-cell *matHeaderCellDef>Amount</th>
-      <td mat-cell *matCellDef="let element">{{ element.amount }}</td>
+      <td mat-cell *matCellDef="let element">{{ element.services.amount }}</td>
     </ng-container>
     <ng-container matColumnDef="date">
       <th mat-header-cell *matHeaderCellDef>Date</th>
@@ -53,7 +57,7 @@
     </ng-container>
     <ng-container matColumnDef="time">
       <th mat-header-cell *matHeaderCellDef>Time</th>
-      <td mat-cell *matCellDef="let element">{{ element.time }}</td>
+      <td mat-cell *matCellDef="let element">{{ element.slot }}</td>
     </ng-container>
 
     <!-- Symbol Column -->

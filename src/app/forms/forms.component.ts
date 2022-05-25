@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import {
   Component,
   DoCheck,
@@ -24,63 +24,7 @@ export interface SalonRecord {
   edit: string;
   delete: string;
 }
-const ELEMENT_DATA: SalonRecord[] = [
-  {
-    amount: 1000,
-    clientname: 'Nadeem',
-    servicename: 'Hair Cut',
-    date: '03/05/2021',
-    time: '08:00pm',
-    edit: '',
-    delete: '',
-  },
-  {
-    amount: 2200,
-    clientname: 'Alice',
-    servicename: 'Facial',
-    date: '23/05/2021',
-    time: '04:00pm',
-    edit: '',
-    delete: '',
-  },
-
-  {
-    amount: 3300,
-    clientname: 'Ahmed',
-    servicename: 'Facial',
-    date: '12/05/2021',
-    time: '09:00pm',
-    edit: '',
-    delete: '',
-  },
-  {
-    amount: 1500,
-    clientname: 'Peter',
-    servicename: 'Hair Style',
-    date: '02/01/2022',
-    time: '19:00pm',
-    edit: '',
-    delete: '',
-  },
-  {
-    amount: 5000,
-    clientname: 'Farah',
-    servicename: 'Bridal Makeup',
-    date: '21/05/2021',
-    time: '04:30pm',
-    edit: '',
-    delete: '',
-  },
-  {
-    amount: 250,
-    clientname: 'Wussat',
-    servicename: 'Beard Trim',
-    date: '05/05/2021',
-    time: '08:30pm',
-    edit: '',
-    delete: '',
-  },
-];
+const ELEMENT_DATA: SalonRecord[] = [];
 @Component({
   selector: 'app-forms',
   templateUrl: './forms.component.html',
@@ -112,6 +56,26 @@ export class FormsComponent implements DoCheck {
     }
   }
   ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+  forTable(varr) {
+    console.log(this.selectedsalon);
+    let data = { id: this.selectedsalon['_id'] };
+    const params = new HttpParams().append('id', this.selectedsalon['_id']);
+    this.http
+      .get('http://localhost:3000/SalonAvailed/', { params })
+      .subscribe((data) => {
+        console.log(data);
+        this.object = data;
+        if (this.object.hasOwnProperty('message')) {
+          console.log('no service is availble for this salon');
+          this.dataSource = new MatTableDataSource();
+        } else {
+          this.dataSource = new MatTableDataSource(this.object);
+        }
+      });
+
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
@@ -183,6 +147,8 @@ export class FormsComponent implements DoCheck {
   data: any = {};
   objects: any;
   objectsEmpty: any = [];
+  salonNames: any;
+  selectedsalon: any;
 
   listData: MatTableDataSource<any>;
 
@@ -259,42 +225,10 @@ export class FormsComponent implements DoCheck {
   }
 
   constructor(private http: HttpClient, private toastr: ToastrService) {
-    // this.entriesObject[0].client = "dsa"
-    // console.log(this.entriesObject[0]["amount"])
-    this.http
-      .get('http://localhost:5000/ViewProfit', {
-        withCredentials: true,
-      })
-      .subscribe(
-        (res) => {
-          this.object = res;
-          console.log(this.object);
-          for (let i = 0; i < this.object.length; i++) {
-            this.projects.push(this.object[i]['Project']);
-          }
-          console.log(this.projects);
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
-
-    this.http
-      .get('http://localhost:5000/ViewAccount', {
-        withCredentials: true,
-      })
-      .subscribe(
-        (res) => {
-          this.object = res;
-          for (let i = 0; i < this.object.length; i++) {
-            this.clients.push(this.object[i]['name']);
-          }
-          console.log(this.clients, 'sas');
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
+    this.http.get('http://localhost:3000/SalonNames').subscribe((data) => {
+      console.log(data);
+      this.salonNames = data;
+    });
   }
 
   ngDoCheck(): void {
@@ -307,53 +241,6 @@ export class FormsComponent implements DoCheck {
 
   addEntry() {
     console.log(this.newDivs, 'test');
-  }
-
-  forTable(varr) {
-    console.log(this.client, this.selectedProject, 'forTABLE');
-    console.log(this.data, 'dataa');
-
-    this.newDivs.map((obj) => {
-      if (
-        obj['client'] !== this.client ||
-        obj['project'] !== this.selectedProject
-      ) {
-        obj['client'] = this.client;
-        obj['project'] = this.selectedProject;
-      }
-    });
-
-    console.log('dataa');
-
-    this.data = {
-      client: this.client,
-      project: this.selectedProject,
-    };
-    if (this.client && this.selectedProject) {
-      this.http
-        .post('http://localhost:5000/ViewEntry', this.data, {
-          withCredentials: true,
-        })
-        .subscribe(
-          (res) => {
-            console.log('here at res');
-            console.log(res);
-            if (res['message'] === 'Project with This Client Dosent exist') {
-              this.showerror(res['message']);
-
-              this.listData = new MatTableDataSource(this.objectsEmpty);
-            } else {
-              this.showsuccess('Account And Project Exist!!');
-              this.objects = res['getEntries'];
-              this.listData = new MatTableDataSource(this.objects);
-            }
-          },
-          (err) => {
-            console.log('here at error');
-            console.log(err);
-          }
-        );
-    }
   }
 
   columnHeader2 = {

@@ -2,7 +2,9 @@ import {
   AfterViewInit,
   Component,
   Inject,
+  OnChanges,
   OnInit,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -22,82 +24,32 @@ import Swal from 'sweetalert2';
 
 export interface UserData {
   name: string;
-  Bank: string;
-  Balance: number;
-  Remarks: string;
+  city: string;
+  address: string;
+  email: string;
+  gender: string;
+  category: string;
 }
 export interface SalonRecord {
   name: string;
-  position: number;
+  city: string;
   address: string;
+  email: string;
+  category: string;
+  gender: string;
   edit: string;
   delete: string;
 }
-const ELEMENT_DATA: SalonRecord[] = [
-  { position: 101, name: 'Deja-Vu', address: 'Karachi', edit: '', delete: '' },
-  {
-    position: 102,
-    name: 'Freinds Salon',
-    address: 'Karachi',
-    edit: '',
-    delete: '',
-  },
-  {
-    position: 103,
-    name: 'Sara Salon & Spa',
-    address: 'Lahore',
-    edit: '',
-    delete: '',
-  },
-  {
-    position: 104,
-    name: 'Toni & Teez',
-    address: 'Islamabad',
-    edit: '',
-    delete: '',
-  },
-  {
-    position: 105,
-    name: 'MahRose Beauty Salon',
-    address: 'Karachi',
-    edit: '',
-    delete: '',
-  },
-  {
-    position: 106,
-    name: 'Pengs Salon',
-    address: 'Islamabad',
-    edit: '',
-    delete: '',
-  },
-  {
-    position: 107,
-    name: 'Kashees Beauty Salon',
-    address: 'Lahore',
-    edit: '',
-    delete: '',
-  },
-  {
-    position: 108,
-    name: 'Salon for Women',
-    address: 'Karachi',
-    edit: '',
-    delete: '',
-  },
-  {
-    position: 109,
-    name: 'ABC - Salon',
-    address: 'Lahore',
-    edit: '',
-    delete: '',
-  },
-  { position: 110, name: 'Hairdo', address: 'Karachi', edit: '', delete: '' },
-];
+
 export interface DialogData {
   name: string;
-  Bank: string;
-  Balance: number;
-  Remarks: string;
+  city: string;
+  address: string;
+  password: string;
+  email: string;
+  gender: string;
+  category: string;
+  maps: string;
   edit: ' ';
   delete: ' ';
 }
@@ -109,21 +61,28 @@ export interface DialogData {
 })
 export class AccountsComponent implements AfterViewInit {
   name: string;
-  Bank: string;
-  Balance: number;
-  Remarks: string;
+  city: string;
+  address: string;
+  email: string;
+  gender: string;
+  category: string;
+  password: string;
+  maps: string;
   object: any;
   listData: MatTableDataSource<any>;
   AccountModel: AccountModel;
   // displayedColumns: string[] = ['name', 'Bank', 'Balance', 'Remarks'];
   displayedColumns: string[] = [
-    'position',
     'name',
     'address',
+    'city',
+    'email',
+    'category',
+    'gender',
     'edit',
     'delete',
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -145,7 +104,21 @@ export class AccountsComponent implements AfterViewInit {
     private toastr: ToastrService,
     private myservice: MyserviceService
   ) {}
+  // ngOnInit() {
+  //   this.dataSource = new MatTableDataSource(this.object);
+  //   // this.dataSource.paginator = this.paginator;
+  // }
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   this.dataSource.paginator = this.paginator;
+  //   this.dataSource.sort = this.sort;
+  // }
   ngAfterViewInit() {
+    console.log('zain haiderr');
+    this.http.get('http://localhost:3000/AllSalon').subscribe((data) => {
+      console.log(data);
+      this.object = data;
+      this.dataSource = new MatTableDataSource(this.object);
+    });
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
@@ -154,28 +127,46 @@ export class AccountsComponent implements AfterViewInit {
     const dialogRef = this.dialog.open(DialogAccount, {
       // width: '60%'
       panelClass: 'custom-modalbox',
-      height: '50%',
-      width: '25%',
+      height: '85%',
+      width: '30%',
       disableClose: true,
       hasBackdrop: true,
       data: {
         name: this.name,
-        Bank: this.Bank,
-        Balance: this.Balance,
-        Remarks: this.Remarks,
+        city: this.city,
+        address: this.address,
+        email: this.email,
+        gender: this.gender,
+        password: this.password,
+        category: this.category,
+        maps: this.maps,
       },
     });
     dialogRef.afterClosed().subscribe((result) => {
       this.name = result['name'];
-      this.Bank = result['Bank'];
-      this.Balance = result['Balance'];
-      this.Remarks = result['Remarks'];
+      this.city = result['city'];
+      this.address = result['address'];
+      this.email = result['email'];
+      this.gender = result['gender'];
+      this.password = result['password'];
+      this.maps = result['maps'];
+      this.category = result['category'];
       this.AccountModel = {
         name: this.name,
-        Bank: this.Bank,
-        Balance: this.Balance,
-        Remarks: this.Remarks,
+        city: this.city,
+        address: this.address,
+        email: this.email,
+        gender: this.gender,
+        password: this.password,
+        category: this.category,
+        maps: this.maps,
       };
+      console.log(this.AccountModel);
+      this.http
+        .post('http://localhost:3000/salon', this.AccountModel)
+        .subscribe((data) => {
+          console.log(data);
+        });
       this.showSuccess();
     });
   }
@@ -189,22 +180,40 @@ export class AccountsComponent implements AfterViewInit {
       hasBackdrop: true,
       data: {
         name: this.name,
-        Bank: this.Bank,
-        Balance: this.Balance,
-        Remarks: this.Remarks,
+        city: this.city,
+        address: this.address,
+        email: this.email,
+        gender: this.gender,
+        password: this.password,
+        category: this.category,
+        maps: this.maps,
       },
     });
     dialogRef.afterClosed().subscribe((result) => {
       this.name = result['name'];
-      this.Bank = result['Bank'];
-      this.Balance = result['Balance'];
-      this.Remarks = result['Remarks'];
+      this.city = result['city'];
+      this.address = result['address'];
+      this.email = result['email'];
+      this.gender = result['gender'];
+      this.password = result['password'];
+      this.maps = result['maps'];
+      this.category = result['category'];
       this.AccountModel = {
         name: this.name,
-        Bank: this.Bank,
-        Balance: this.Balance,
-        Remarks: this.Remarks,
+        city: this.city,
+        address: this.address,
+        email: this.email,
+        gender: this.gender,
+        password: this.password,
+        category: this.category,
+        maps: this.maps,
       };
+      console.log(this.AccountModel);
+      this.http
+        .post('http://localhost:3000/salon', this.AccountModel)
+        .subscribe((data) => {
+          console.log(data);
+        });
       this.showSuccess();
     });
   }
@@ -266,7 +275,7 @@ export class UpdateAccount {
     private http: HttpClient
   ) {
     this.http
-      .get('http://localhost:5000/ViewAccount', {
+      .get('http://localhost:3000/ViewAccount', {
         withCredentials: true,
       })
       .subscribe(

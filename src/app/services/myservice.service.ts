@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { Socket } from 'ngx-socket-io';
 
-const baseUrl = 'http://localhost:5000';
+const baseUrl = 'http://localhost:3000';
 @Injectable({
   providedIn: 'root',
 })

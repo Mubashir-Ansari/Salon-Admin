@@ -1,3 +1,4 @@
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -13,56 +14,7 @@ export interface SalonRecord {
   edit: string;
   delete: string;
 }
-const ELEMENT_DATA: SalonRecord[] = [
-  {
-    charges: 1000,
-    description: 'Stylish Hair cut with nice look.',
-    servicename: 'Hair Cut',
-    time: '50 min',
-    edit: '',
-    delete: '',
-  },
-  {
-    charges: 500,
-    description: 'Excellent triming and styling.',
-    servicename: 'Beard Trim',
-    time: '25 min',
-    edit: '',
-    delete: '',
-  },
-  {
-    charges: 5000,
-    description: 'Beautiful and Elegant makeup.',
-    servicename: 'Bridal Makeup',
-    time: '3 hr',
-    edit: '',
-    delete: '',
-  },
-  {
-    charges: 1500,
-    description: 'High quality and smoothing facial.',
-    servicename: 'Facial',
-    time: '45 min',
-    edit: '',
-    delete: '',
-  },
-  {
-    charges: 3500,
-    description: 'Smart and Handsome pm.',
-    servicename: 'Groom Makeup',
-    time: '2 hr',
-    edit: '',
-    delete: '',
-  },
-  {
-    charges: 1200,
-    description: 'Cleaning and drying hair.',
-    servicename: 'Hair Wash',
-    time: '30 min',
-    edit: '',
-    delete: '',
-  },
-];
+const ELEMENT_DATA: SalonRecord[] = [];
 @Component({
   selector: 'app-costcenter',
   templateUrl: './costcenter.component.html',
@@ -70,21 +22,28 @@ const ELEMENT_DATA: SalonRecord[] = [
 })
 export class CostcenterComponent implements AfterViewInit {
   displayedColumns: string[] = [
-    'servicename',
+    'name',
     'description',
-    'charges',
-    'time',
+    'amount',
+    'duration',
     'edit',
     'delete',
   ];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
-
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   dialog: any;
   myservice: any;
   toastr: any;
-  constructor() {}
+  object: any;
+  selectedsalon: any;
+  salonNames: any;
+  constructor(private http: HttpClient) {
+    this.http.get('http://localhost:3000/SalonNames').subscribe((data) => {
+      console.log(data);
+      this.salonNames = data;
+    });
+  }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -95,6 +54,26 @@ export class CostcenterComponent implements AfterViewInit {
     }
   }
   ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+  forTable(varr) {
+    console.log(this.selectedsalon);
+    let data = { id: this.selectedsalon['_id'] };
+    const params = new HttpParams().append('id', this.selectedsalon['_id']);
+    this.http
+      .get('http://localhost:3000/service/', { params })
+      .subscribe((data) => {
+        console.log(data);
+        this.object = data;
+        if (this.object.hasOwnProperty('message')) {
+          console.log('no service is availble for this salon');
+          this.dataSource = new MatTableDataSource();
+        } else {
+          this.dataSource = new MatTableDataSource(this.object);
+        }
+      });
+
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }

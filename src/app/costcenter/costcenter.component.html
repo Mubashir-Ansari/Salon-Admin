@@ -4,11 +4,21 @@
     <div class="box">
       <mat-form-field appearance="fill" class="searchbox">
         <mat-label>Select Salon</mat-label>
-        <mat-select disableRipple>
+        <mat-select
+          [(ngModel)]="selectedsalon"
+          name="project"
+          (ngModelChange)="forTable($event)"
+        >
+          <mat-option *ngFor="let salon of salonNames" [value]="salon">
+            {{ salon.name }}
+          </mat-option>
+        </mat-select>
+
+        <!-- <mat-select disableRipple>
           <mat-option value="1">Deja-Vu</mat-option>
           <mat-option value="2">Freinds Salon</mat-option>
           <mat-option value="3">Toni & Teez</mat-option>
-        </mat-select>
+        </mat-select> -->
       </mat-form-field>
 
       <button
@@ -34,12 +44,10 @@
       </mat-form-field>
       <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
         <!-- Position Column -->
-        <ng-container matColumnDef="servicename">
+        <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef>Service Name</th>
           <td mat-cell *matCellDef="let element">
-            <img class="image" [src]="url" height="40" />{{
-              element.servicename
-            }}
+            <img class="image" [src]="url" height="40" />{{ element.name }}
           </td>
         </ng-container>
 
@@ -50,13 +58,13 @@
         </ng-container>
 
         <!-- Weight Column -->
-        <ng-container matColumnDef="charges">
+        <ng-container matColumnDef="amount">
           <th mat-header-cell *matHeaderCellDef>Charges</th>
-          <td mat-cell *matCellDef="let element">{{ element.charges }}</td>
+          <td mat-cell *matCellDef="let element">{{ element.amount }}</td>
         </ng-container>
-        <ng-container matColumnDef="time">
+        <ng-container matColumnDef="duration">
           <th mat-header-cell *matHeaderCellDef>Duration</th>
-          <td mat-cell *matCellDef="let element">{{ element.time }}</td>
+          <td mat-cell *matCellDef="let element">{{ element.duration }}</td>
         </ng-container>
 
         <!-- Symbol Column -->
