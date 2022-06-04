@@ -21,6 +21,8 @@ import { MyserviceService } from 'src/app/services/myservice.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import Swal from 'sweetalert2';
+import { environment } from 'src/environments/environment.prod';
+const baseUrl = environment.baseUrl;
 
 export interface UserData {
   name: string;
@@ -114,8 +116,7 @@ export class AccountsComponent implements AfterViewInit {
   //   this.dataSource.sort = this.sort;
   // }
   ngAfterViewInit() {
-    console.log('zain haiderr');
-    this.http.get('http://localhost:3000/AllSalon').subscribe((data) => {
+    this.http.get(`${baseUrl}/AllSalon`).subscribe((data) => {
       console.log(data);
       this.object = data;
       this.dataSource = new MatTableDataSource(this.object);
@@ -164,7 +165,7 @@ export class AccountsComponent implements AfterViewInit {
       };
       console.log(this.AccountModel);
       this.http
-        .post('http://localhost:3000/salon', this.AccountModel)
+        .post(`${baseUrl}/salon`, this.AccountModel)
         .subscribe((data) => {
           console.log(data);
         });
@@ -199,7 +200,7 @@ export class AccountsComponent implements AfterViewInit {
       data.password = result['password'];
       data.maps = result['maps'];
       data.category = result['category'];
-      this.http.put('http://localhost:3000/salon', data).subscribe((data) => {
+      this.http.put(`${baseUrl}/salon`, data).subscribe((data) => {
         console.log(data);
       });
       this.showSuccess();
@@ -223,26 +224,20 @@ export class AccountsComponent implements AfterViewInit {
           }),
           body: data,
         };
-        this.http
-          .delete('http://localhost:3000/deleteSalon', options)
-          .subscribe(
-            (res) => {
-              console.log(res);
-              if (res['message'] === 'account deleted') {
-                Swal.fire(
-                  'Deleted!',
-                  'Your Salon has been deleted.',
-                  'success'
-                );
-              } else {
-                Swal.fire('Error!', 'Unable to Delete the Salon', 'error');
-              }
-              this.info = ' ';
-            },
-            (error) => {
-              console.error(error);
+        this.http.delete(`${baseUrl}/deleteSalon`, options).subscribe(
+          (res) => {
+            console.log(res);
+            if (res['message'] === 'account deleted') {
+              Swal.fire('Deleted!', 'Your Salon has been deleted.', 'success');
+            } else {
+              Swal.fire('Error!', 'Unable to Delete the Salon', 'error');
             }
-          );
+            this.info = ' ';
+          },
+          (error) => {
+            console.error(error);
+          }
+        );
       }
     });
   }

@@ -14,6 +14,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
 import { UpdateAccount } from '../accounts/accounts.component';
+import { environment } from 'src/environments/environment.prod';
+const baseUrl = environment.baseUrl;
 
 export interface SalonRecord {
   clientname: string;
@@ -67,9 +69,12 @@ export class FormsComponent implements DoCheck {
       .set('id', this.selectedsalon['_id'])
       .set('filter', filterr);
     console.log('TEST', params);
+
     // const params = new HttpParams().append('id', this.selectedsalon['_id'],'filter',this.filterr);
     this.http
-      .get('https://15ef-111-88-42-93.ap.ngrok.io/SalonAvailed/', { params })
+      .get(`${baseUrl}/SalonAvailed/`, {
+        params,
+      })
       .subscribe((data) => {
         console.log(data);
         this.object = data;
@@ -200,7 +205,7 @@ export class FormsComponent implements DoCheck {
     if (summ === this.total) {
       console.log('debit = credit');
       this.http
-        .post('http://localhost:5000/Entries', this.newDivs, {
+        .post(`${baseUrl}/Entries`, this.newDivs, {
           withCredentials: true,
         })
         .subscribe(
@@ -230,7 +235,7 @@ export class FormsComponent implements DoCheck {
   }
 
   constructor(private http: HttpClient, private toastr: ToastrService) {
-    this.http.get('http://localhost:3000/SalonNames').subscribe((data) => {
+    this.http.get(`${baseUrl}/SalonNames`).subscribe((data) => {
       console.log(data);
       this.salonNames = data;
     });

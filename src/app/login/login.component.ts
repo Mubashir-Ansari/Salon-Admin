@@ -3,6 +3,8 @@ import { Component, OnInit, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginModel } from '../LoginModel';
 import { respond } from '../respond';
+import { environment } from 'src/environments/environment.prod';
+const baseUrl = environment.baseUrl;
 
 @Component({
   selector: 'app-login',
@@ -30,7 +32,7 @@ export class LoginComponent implements OnInit {
     };
     console.log(this.data);
     this.http
-      .post(`http://localhost:3000/signin`, this.data, {
+      .post(`${baseUrl}/signin`, this.data, {
         withCredentials: true,
       })
       .subscribe(

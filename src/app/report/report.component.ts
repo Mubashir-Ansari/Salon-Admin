@@ -4,7 +4,8 @@ import { Router } from '@angular/router';
 import * as Chart from 'chart.js';
 import { ToastrService } from 'ngx-toastr';
 import { MyserviceService } from '../services/myservice.service';
-
+import { environment } from 'src/environments/environment.prod';
+const baseUrl = environment.baseUrl;
 @Component({
   selector: 'app-report',
   templateUrl: './report.component.html',
@@ -45,7 +46,7 @@ export class ReportComponent implements OnInit {
     private myservice: MyserviceService,
     private router: Router
   ) {
-    this.http.get('http://localhost:3000/SalonNames').subscribe((data) => {
+    this.http.get(`${baseUrl}/SalonNames`).subscribe((data) => {
       console.log(data);
       this.salonNames = data;
     });
@@ -73,7 +74,9 @@ export class ReportComponent implements OnInit {
       .set('filter', filterr);
     console.log('TEST', params);
     await this.http
-      .get('http://localhost:3000/SalonAvailed/', { params })
+      .get(`${baseUrl}/SalonAvailed/`, {
+        params,
+      })
       .toPromise()
       .then((data) => {
         console.log(data);

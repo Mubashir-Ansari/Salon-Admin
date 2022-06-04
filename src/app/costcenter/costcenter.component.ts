@@ -17,7 +17,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
-import { UpdateAccount } from '../accounts/accounts.component';
+import { environment } from 'src/environments/environment.prod';
+const baseUrl = environment.baseUrl;
 
 export interface DialogData {
   name: string;
@@ -64,7 +65,7 @@ export class CostcenterComponent implements AfterViewInit {
     private router: Router,
     private toastr: ToastrService
   ) {
-    this.http.get('http://localhost:3000/SalonNames').subscribe((data) => {
+    this.http.get(`${baseUrl}/SalonNames`).subscribe((data) => {
       console.log(data);
       this.salonNames = data;
     });
@@ -87,7 +88,7 @@ export class CostcenterComponent implements AfterViewInit {
     let data = { id: this.selectedsalon['_id'] };
     const params = new HttpParams().append('id', this.selectedsalon['_id']);
     this.http
-      .get('http://localhost:3000/service/', { params })
+      .get('https://shielded-fortress-42931.herokuapp.com/service/', { params })
       .subscribe((data) => {
         console.log(data);
         this.object = data;
@@ -122,9 +123,11 @@ export class CostcenterComponent implements AfterViewInit {
       data.description = result['description'];
       data.amount = result['amount'];
       data.duration = result['duration'];
-      this.http.put('http://localhost:3000/service', data).subscribe((data) => {
-        console.log(data);
-      });
+      this.http
+        .put('https://shielded-fortress-42931.herokuapp.com/service', data)
+        .subscribe((data) => {
+          console.log(data);
+        });
       this.showSuccess();
     });
   }
@@ -150,7 +153,10 @@ export class CostcenterComponent implements AfterViewInit {
           body: data,
         };
         this.http
-          .delete('http://localhost:3000/deleteService', options)
+          .delete(
+            'https://shielded-fortress-42931.herokuapp.com/deleteService',
+            options
+          )
           .subscribe(
             (res) => {
               console.log(res);

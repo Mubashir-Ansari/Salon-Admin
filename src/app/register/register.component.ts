@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { RegisterModel } from '../RegisterModel';
 import { Router } from '@angular/router';
 import { Component, OnInit, ElementRef } from '@angular/core';
-
+import { environment } from 'src/environments/environment.prod';
+const baseUrl = environment.baseUrl;
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -35,25 +36,23 @@ export class RegisterComponent implements OnInit {
       work: this.work,
     };
     console.log(this.data);
-    this.http
-      .post('http://localhost:3000/registration', this.data, {})
-      .subscribe(
-        (res) => {
-          {
-            console.log(res['message']);
-            if (res['message'] === 'Registered Sucessfully') {
-              this.login();
-            } else {
-              this.check = false;
-              this.altermessage = res['message'];
-            }
+    this.http.post(`${baseUrl}/registration`, this.data, {}).subscribe(
+      (res) => {
+        {
+          console.log(res['message']);
+          if (res['message'] === 'Registered Sucessfully') {
+            this.login();
+          } else {
+            this.check = false;
+            this.altermessage = res['message'];
           }
-        },
-        (err) => {
-          console.log(err);
-          console.log(err['message']);
         }
-      );
+      },
+      (err) => {
+        console.log(err);
+        console.log(err['message']);
+      }
+    );
   }
 
   login() {

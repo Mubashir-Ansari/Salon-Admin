@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  baseUrl: 'https://shielded-fortress-42931.herokuapp.com',
 };
