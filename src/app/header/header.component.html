@@ -18,7 +18,11 @@
               >keyboard_arrow_down</mat-icon
             >
           </button>
-          <mat-menu #menu="matMenu">
+          <mat-menu #menu="matMenu" style="width: 100%">
+            <button mat-menu-item (click)="register()">
+              <mat-icon>add</mat-icon>
+              Add Administrator
+            </button>
             <button mat-menu-item (click)="logout()">
               <mat-icon>exit_to_app</mat-icon>
               Logout

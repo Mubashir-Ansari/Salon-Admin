@@ -1,5 +1,9 @@
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import * as Chart from 'chart.js';
+import { ToastrService } from 'ngx-toastr';
+import { MyserviceService } from '../services/myservice.service';
 
 @Component({
   selector: 'app-report',
@@ -7,61 +11,177 @@ import * as Chart from 'chart.js';
   styleUrls: ['./report.component.css'],
 })
 export class ReportComponent implements OnInit {
-  constructor() {}
+  myChart: Chart;
+  data: any = {};
+  selectedsalon: String;
+  salonNames: any;
+  objects: any;
+  object: any;
+  reportdata: any;
+  monthsName: string[] = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'dec',
+  ];
+  validate: string[] = [];
+  format: string[] = [];
+  months: string[] = [];
+  expenses: number[] = [];
+  amounts: number[] = [];
+  sum: number = 0;
+
+  constructor(
+    private http: HttpClient,
+    private toastr: ToastrService,
+    private myservice: MyserviceService,
+    private router: Router
+  ) {
+    this.http.get('http://localhost:3000/SalonNames').subscribe((data) => {
+      console.log(data);
+      this.salonNames = data;
+    });
+  }
 
   ngOnInit() {
-    const myChart = new Chart('myChart', {
+    console.log('VALUEE:');
+  }
+
+  showerror(message) {
+    this.toastr.error(message, 'Error!');
+  }
+
+  showsuccess(message) {
+    this.toastr.success(message, 'Success!');
+  }
+
+  async forReport(varr) {
+    console.log('here at reportss');
+    console.log(this.salonNames);
+    console.log(this.selectedsalon);
+    let filterr = 'Finished';
+    const params = new HttpParams()
+      .set('id', this.selectedsalon['_id'])
+      .set('filter', filterr);
+    console.log('TEST', params);
+    await this.http
+      .get('http://localhost:3000/SalonAvailed/', { params })
+      .toPromise()
+      .then((data) => {
+        console.log(data);
+        this.object = data;
+      })
+      .catch((err) => {
+        console.log('error');
+      });
+    console.log(this.object, 'DATA');
+    this.NewFunction(this.object);
+  }
+  NewFunction(reportdata) {
+    console.log('here', reportdata);
+    this.validate = [];
+    this.format = [];
+    this.months = [];
+    this.expenses = [];
+    this.amounts = [];
+    this.sum = 0;
+    for (let i = 0; i < reportdata.length; i++) {
+      this.format.push(
+        reportdata[i]['date'][5] +
+          reportdata[i]['date'][6] +
+          reportdata[i]['date'][7]
+      );
+      this.amounts.push(reportdata[i].services['amount']);
+    }
+    for (let i = 0; i < this.format.length; i++) {
+      console.log(i, 'loop');
+    }
+
+    for (let i = 0; i < this.format.length; i++) {
+      if (this.validate.includes(this.format[i]) === false) {
+        let index = this.monthsName.indexOf(this.format[i]);
+        console.log(index);
+        this.validate.push(this.format[i]);
+        this.months.push(this.monthsName[index]);
+        for (let j = 0; j < this.format.length; j++) {
+          if (this.format[i] === this.format[j]) {
+            this.sum = this.sum + this.amounts[j];
+          }
+        }
+
+        if (this.sum !== 0) {
+          this.expenses.push(this.sum);
+          this.sum = 0;
+        }
+      }
+      console.log(i);
+    }
+    console.log(this.months, 'months');
+    console.log(this.expenses, 'expenses');
+    if (this.myChart) {
+      console.log('here at destroy');
+      this.myChart.destroy();
+    }
+    this.chartFunc();
+  }
+  chartFunc() {
+    this.myChart = new Chart('testChart', {
       type: 'bar',
       data: {
-        labels: [
-          'JAN',
-          'FEB',
-          'MAR',
-          'APR',
-          'MAY',
-          'JUN',
-          'JUL',
-          'AUG',
-          'SEP',
-          'OCT',
-          'NOV',
-          'DEC',
-        ],
+        labels: this.months,
         datasets: [
           {
-            label: 'Total Sales in Thousands',
-            data: [12, 19, 13, 15, 7, 9, 10, 8, 18, 11, 15, 11],
+            label: 'Total Income',
+            data: this.expenses,
             backgroundColor: [
-              'rgba(255, 99, 132, 0.2)',
               'rgba(54, 162, 235, 0.2)',
-              'rgba(255, 206, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)',
-              'rgba(153, 102, 255, 0.2)',
-              'rgba(255, 159, 64, 0.2)',
-              'rgba(255, 99, 132, 0.2)',
               'rgba(54, 162, 235, 0.2)',
-              'rgba(255, 206, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)',
-              'rgba(153, 102, 255, 0.2)',
-              'rgba(255, 159, 64, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
             ],
             borderColor: [
-              'rgba(255, 99, 132, 1)',
               'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)',
-              'rgba(153, 102, 255, 1)',
-              'rgba(255, 159, 64, 1)',
-              'rgba(255, 99, 132, 1)',
               'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)',
-              'rgba(153, 102, 255, 1)',
-              'rgba(255, 159, 64, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(54, 162, 235, 1)',
             ],
-            borderWidth: 2,
+            borderWidth: 1,
           },
         ],
+      },
+      options: {
+        // responsive: true,
+        // maintainAspectRatio: false,
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true,
+              },
+            },
+          ],
+        },
       },
     });
   }

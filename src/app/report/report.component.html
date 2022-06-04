@@ -4,10 +4,14 @@
     <div class="box">
       <mat-form-field appearance="fill" class="searchbox">
         <mat-label>Select Salon</mat-label>
-        <mat-select disableRipple>
-          <mat-option value="1">Deja-Vu</mat-option>
-          <mat-option value="2">Freinds Salon</mat-option>
-          <mat-option value="3">Toni & Teez</mat-option>
+        <mat-select
+          [(ngModel)]="selectedsalon"
+          name="project"
+          (ngModelChange)="forReport($event)"
+        >
+          <mat-option *ngFor="let salon of salonNames" [value]="salon">
+            {{ salon.name }}
+          </mat-option>
         </mat-select>
       </mat-form-field>
 
@@ -21,8 +25,9 @@
       </button>
     </div>
     <mat-divider class="bott"></mat-divider>
-    <div style="width: 700px; height: 700px">
-      <canvas id="myChart"></canvas>
+    <div class="graph">
+      <canvas id="testChart"></canvas>
     </div>
+    <div class="page__content-data position-absolute"></div>
   </div>
 </div>

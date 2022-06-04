@@ -30,5 +30,5 @@ mat-toolbar {
   font-size: 16px;
 }
 ::ng-deep .mat-menu-content {
-  width: 160px;
+  width: 200px;
 }

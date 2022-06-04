@@ -1,10 +1,32 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import {
+  AfterViewInit,
+  Component,
+  Inject,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
 import { UpdateAccount } from '../accounts/accounts.component';
+
+export interface DialogData {
+  name: string;
+  description: string;
+  amount: number;
+  duration: string;
+  edit: ' ';
+  delete: ' ';
+}
 
 export interface SalonRecord {
   servicename: string;
@@ -32,13 +54,16 @@ export class CostcenterComponent implements AfterViewInit {
   dataSource = new MatTableDataSource(ELEMENT_DATA);
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  dialog: any;
   myservice: any;
-  toastr: any;
   object: any;
   selectedsalon: any;
   salonNames: any;
-  constructor(private http: HttpClient) {
+  constructor(
+    public dialog: MatDialog,
+    private http: HttpClient,
+    private router: Router,
+    private toastr: ToastrService
+  ) {
     this.http.get('http://localhost:3000/SalonNames').subscribe((data) => {
       console.log(data);
       this.salonNames = data;
@@ -77,43 +102,97 @@ export class CostcenterComponent implements AfterViewInit {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
-  updateDialog(): void {
-    const dialogRef = this.dialog.open(UpdateAccount, {
+  updateDialog(data): void {
+    const dialogRef = this.dialog.open(UpdateCostcenter, {
       // width: '60%'
       panelClass: 'custom-modalbox',
-      height: '50%',
-      width: '25%',
+      height: '60%',
+      width: '30%',
       disableClose: true,
       hasBackdrop: true,
+      data: {
+        name: data.name,
+        description: data.description,
+        amount: data.amount,
+        duration: data.duration,
+      },
     });
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe((result) => {
+      data.name = result['name'];
+      data.description = result['description'];
+      data.amount = result['amount'];
+      data.duration = result['duration'];
+      this.http.put('http://localhost:3000/service', data).subscribe((data) => {
+        console.log(data);
+      });
+      this.showSuccess();
+    });
   }
   showSuccess() {
     this.toastr.success('Successful!', 'Account Added');
   }
   getData(data) {
+    console.log(data);
     Swal.fire({
       title: 'Are you sure?',
-      text: 'All the Services associated to this Salon will get delete',
+      text: 'All the Details associated to this Salon will get delete',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#32CD32',
       confirmButtonText: 'Yes, delete it!',
-    }).then(
-      (result) => {
-        if (result.isConfirmed) {
-          Swal.fire(
-            'Deleted!',
-            'Specific Service has been deleted.',
-            'success'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const options = {
+          headers: new HttpHeaders({
+            'Content-Type': 'application/json',
+          }),
+          body: data,
+        };
+        this.http
+          .delete('http://localhost:3000/deleteService', options)
+          .subscribe(
+            (res) => {
+              console.log(res);
+              if (res['message'] === 'service deleted') {
+                Swal.fire(
+                  'Deleted!',
+                  'Specific Salon Service has been deleted.',
+                  'success'
+                );
+              } else {
+                Swal.fire(
+                  'Error!',
+                  'Unable to Delete the Salon Service',
+                  'error'
+                );
+              }
+            },
+            (error) => {
+              console.error(error);
+            }
           );
-        }
-      },
-      (error) => {
-        console.error(error);
       }
-    );
+    });
   }
   url = './assets/service.png';
+}
+
+@Component({
+  selector: 'update-costcenter',
+  templateUrl: './update-costcenter.html',
+})
+export class UpdateCostcenter {
+  object: any;
+  name: string[] = [];
+  Names: any;
+  constructor(
+    public dialogRef: MatDialogRef<UpdateCostcenter>,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    private http: HttpClient
+  ) {}
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 }

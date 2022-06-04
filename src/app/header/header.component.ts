@@ -21,4 +21,7 @@ export class HeaderComponent implements OnInit {
   logout() {
     this.router.navigateByUrl('login');
   }
+  register() {
+    this.router.navigateByUrl('register');
+  }
 }

@@ -36,7 +36,7 @@ export class RegisterComponent implements OnInit {
     };
     console.log(this.data);
     this.http
-      .post('http://localhost:5000/registration', this.data, {})
+      .post('http://localhost:3000/registration', this.data, {})
       .subscribe(
         (res) => {
           {

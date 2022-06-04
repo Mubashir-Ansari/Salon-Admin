@@ -35,7 +35,10 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
-import { CostcenterComponent } from './costcenter/costcenter.component';
+import {
+  CostcenterComponent,
+  UpdateCostcenter,
+} from './costcenter/costcenter.component';
 import { TabComponent } from './layouts/tab/tab.component';
 import { ReusableTableComponent } from './layouts/reusable-table/reusable-table.component';
 import { JentryComponent } from './jentry/jentry.component';
@@ -70,6 +73,7 @@ const config: SocketIoConfig = { url: 'http://localhost:5000', options: {} };
     AccountsComponent,
     DialogAccount,
     UpdateAccount,
+    UpdateCostcenter,
     CostcenterComponent,
     TabComponent,
     ReusableTableComponent,

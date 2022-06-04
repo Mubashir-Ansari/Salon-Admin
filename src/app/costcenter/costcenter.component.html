@@ -13,12 +13,6 @@
             {{ salon.name }}
           </mat-option>
         </mat-select>
-
-        <!-- <mat-select disableRipple>
-          <mat-option value="1">Deja-Vu</mat-option>
-          <mat-option value="2">Freinds Salon</mat-option>
-          <mat-option value="3">Toni & Teez</mat-option>
-        </mat-select> -->
       </mat-form-field>
 
       <button
@@ -78,7 +72,7 @@
               style="font-size: large"
               aria-label="Example icon button with a home icon"
             >
-              <mat-icon (click)="updateDialog()">edit</mat-icon>
+              <mat-icon (click)="updateDialog(element)">edit</mat-icon>
             </button>
           </td>
         </ng-container>

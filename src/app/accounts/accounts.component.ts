@@ -7,7 +7,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { MatTableDataSource } from '@angular/material/table';
 import { AccountModel } from '../AccountModel';
 import {
@@ -60,6 +60,7 @@ export interface DialogData {
   styleUrls: ['./accounts.component.css'],
 })
 export class AccountsComponent implements AfterViewInit {
+  info: string = ' ';
   name: string;
   city: string;
   address: string;
@@ -86,6 +87,7 @@ export class AccountsComponent implements AfterViewInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  selectedsalon: any;
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -101,8 +103,7 @@ export class AccountsComponent implements AfterViewInit {
     public dialog: MatDialog,
     private http: HttpClient,
     private router: Router,
-    private toastr: ToastrService,
-    private myservice: MyserviceService
+    private toastr: ToastrService
   ) {}
   // ngOnInit() {
   //   this.dataSource = new MatTableDataSource(this.object);
@@ -170,54 +171,42 @@ export class AccountsComponent implements AfterViewInit {
       this.showSuccess();
     });
   }
-  updateDialog(): void {
+  updateDialog(data): void {
     const dialogRef = this.dialog.open(UpdateAccount, {
       // width: '60%'
       panelClass: 'custom-modalbox',
-      height: '50%',
-      width: '25%',
+      height: '85%',
+      width: '30%',
       disableClose: true,
       hasBackdrop: true,
       data: {
-        name: this.name,
-        city: this.city,
-        address: this.address,
-        email: this.email,
-        gender: this.gender,
-        password: this.password,
-        category: this.category,
-        maps: this.maps,
+        name: data.name,
+        city: data.city,
+        address: data.address,
+        email: data.email,
+        gender: data.gender,
+        password: data.password,
+        category: data.category,
+        maps: data.maps,
       },
     });
     dialogRef.afterClosed().subscribe((result) => {
-      this.name = result['name'];
-      this.city = result['city'];
-      this.address = result['address'];
-      this.email = result['email'];
-      this.gender = result['gender'];
-      this.password = result['password'];
-      this.maps = result['maps'];
-      this.category = result['category'];
-      this.AccountModel = {
-        name: this.name,
-        city: this.city,
-        address: this.address,
-        email: this.email,
-        gender: this.gender,
-        password: this.password,
-        category: this.category,
-        maps: this.maps,
-      };
-      console.log(this.AccountModel);
-      this.http
-        .post('http://localhost:3000/salon', this.AccountModel)
-        .subscribe((data) => {
-          console.log(data);
-        });
+      data.name = result['name'];
+      data.city = result['city'];
+      data.address = result['address'];
+      data.email = result['email'];
+      data.gender = result['gender'];
+      data.password = result['password'];
+      data.maps = result['maps'];
+      data.category = result['category'];
+      this.http.put('http://localhost:3000/salon', data).subscribe((data) => {
+        console.log(data);
+      });
       this.showSuccess();
     });
   }
   getData(data) {
+    console.log(data);
     Swal.fire({
       title: 'Are you sure?',
       text: 'All the Details associated to this Salon will get delete',
@@ -226,16 +215,36 @@ export class AccountsComponent implements AfterViewInit {
       confirmButtonColor: '#d33',
       cancelButtonColor: '#32CD32',
       confirmButtonText: 'Yes, delete it!',
-    }).then(
-      (result) => {
-        if (result.isConfirmed) {
-          Swal.fire('Deleted!', 'Your Salon has been deleted.', 'success');
-        }
-      },
-      (error) => {
-        console.error(error);
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const options = {
+          headers: new HttpHeaders({
+            'Content-Type': 'application/json',
+          }),
+          body: data,
+        };
+        this.http
+          .delete('http://localhost:3000/deleteSalon', options)
+          .subscribe(
+            (res) => {
+              console.log(res);
+              if (res['message'] === 'account deleted') {
+                Swal.fire(
+                  'Deleted!',
+                  'Your Salon has been deleted.',
+                  'success'
+                );
+              } else {
+                Swal.fire('Error!', 'Unable to Delete the Salon', 'error');
+              }
+              this.info = ' ';
+            },
+            (error) => {
+              console.error(error);
+            }
+          );
       }
-    );
+    });
   }
 
   ngOnInit() {
@@ -273,28 +282,7 @@ export class UpdateAccount {
     public dialogRef: MatDialogRef<UpdateAccount>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private http: HttpClient
-  ) {
-    this.http
-      .get('http://localhost:3000/ViewAccount', {
-        withCredentials: true,
-      })
-      .subscribe(
-        (res) => {
-          console.log('resss');
-          this.object = res;
-          for (let i = 0; i < this.object.length; i++) {
-            this.name.push(this.object[i]['name']);
-          }
-          console.log(this.name, 'here at profittt');
-          this.Names = this.name;
-          console.log(this.Names);
-        },
-        (err) => {
-          console.log('resss');
-          console.log(err);
-        }
-      );
-  }
+  ) {}
 
   onNoClick(): void {
     this.dialogRef.close();

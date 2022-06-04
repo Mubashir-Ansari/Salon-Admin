@@ -22,15 +22,48 @@ export class LoginComponent implements OnInit {
     private http: HttpClient,
     private elementRef: ElementRef
   ) {}
-  Onsubmit() {}
+  Onsubmit() {
+    console.log('here at submit');
+    this.data = {
+      email: this.email,
+      password: this.password,
+    };
+    console.log(this.data);
+    this.http
+      .post(`http://localhost:3000/signin`, this.data, {
+        withCredentials: true,
+      })
+      .subscribe(
+        (res) => {
+          {
+            console.log(res);
+            console.log(res['message']);
+            if (res['message'] === 'loggin succesfully') {
+              console.log('here at iff condition');
+              // console.log(res['token']);
+              // const dateNow = new Date();
+              // dateNow.setMinutes(dateNow.getMinutes() + 10);
+              // this.cookieService.set('Book', res['token'], dateNow);
+              // this.settoken = res['token'];
+              this.login();
+            } else {
+              this.check = false;
+              this.altermessage = res['message'];
+            }
+          }
+        },
+        (err) => {
+          console.log(err);
+          console.log(err['message']);
+        }
+      );
+  }
 
   ngOnInit(): void {
     // this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor =
     //   '#141c2e';
   }
-  register() {
-    this.router.navigateByUrl('register');
-  }
+
   login() {
     this.router.navigateByUrl('dashboard');
   }

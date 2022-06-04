@@ -37,8 +37,8 @@ export class FormsComponent implements DoCheck {
     'amount',
     'date',
     'time',
-    'edit',
-    'delete',
+    // 'edit',
+    // 'delete',
   ];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
 
@@ -62,9 +62,14 @@ export class FormsComponent implements DoCheck {
   forTable(varr) {
     console.log(this.selectedsalon);
     let data = { id: this.selectedsalon['_id'] };
-    const params = new HttpParams().append('id', this.selectedsalon['_id']);
+    let filterr = 'Finished';
+    const params = new HttpParams()
+      .set('id', this.selectedsalon['_id'])
+      .set('filter', filterr);
+    console.log('TEST', params);
+    // const params = new HttpParams().append('id', this.selectedsalon['_id'],'filter',this.filterr);
     this.http
-      .get('http://localhost:3000/SalonAvailed/', { params })
+      .get('https://15ef-111-88-42-93.ap.ngrok.io/SalonAvailed/', { params })
       .subscribe((data) => {
         console.log(data);
         this.object = data;

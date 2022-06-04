@@ -1,0 +1,40 @@
+<div class="dialog">
+  <h1 mat-dialog-title>Edit Service Details</h1>
+  <mat-dialog-content class="content">
+    <mat-form-field appearance="fill" style="width: 100%">
+      <mat-label
+        >Service Name <span class="required-asterisk">*</span></mat-label
+      >
+      <input matInput [(ngModel)]="data.name" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" style="width: 100%">
+      <mat-label
+        >Description <span class="required-asterisk">*</span></mat-label
+      >
+      <input matInput [(ngModel)]="data.description" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" style="width: 100%">
+      <mat-label>Charges <span class="required-asterisk">*</span></mat-label>
+      <input matInput [(ngModel)]="data.amount" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" style="width: 100%">
+      <mat-label>Duration <span class="required-asterisk">*</span></mat-label>
+      <input matInput [(ngModel)]="data.duration" />
+    </mat-form-field>
+
+    <mat-dialog-actions>
+      <button mat-raised-button (click)="onNoClick()">No Thanks</button>
+      <button
+        mat-raised-button
+        color="primary"
+        [mat-dialog-close]="data"
+        cdkFocusInitial
+      >
+        Update
+      </button>
+    </mat-dialog-actions>
+  </mat-dialog-content>
+</div>
